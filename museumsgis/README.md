@@ -1,0 +1,2 @@
+# MuseumsGIS
+ MuseumsGIS QGIS Plugin
