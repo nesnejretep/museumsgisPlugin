@@ -24,7 +24,7 @@
 from qgis.core import  QgsVectorLayer, QgsRasterLayer, QgsProject, QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsProject, QgsRasterLayer, QgsVectorLayer
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt, QFileInfo
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QMenu
+from qgis.PyQt.QtWidgets import QAction, QMenu, QMessageBox
 import xml.etree.ElementTree as et
 
 # Initialize Qt resources from file resources.py
@@ -127,7 +127,12 @@ class MuseumsGIS:
     def showHistoriskeKort(self):
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dockwidget)
         self.dockwidget.show()
-        QgsProject.instance().addMapLayer(QgsVectorLayer(os.path.join(self.plugin_dir,"tilemaps.geojson"),"Original-1 (1806-1822)","ogr"))  
+        oversigtskort = QgsVectorLayer(os.path.join(self.plugin_dir,"tilemaps.geojson"),"Original-1 (1806-1822)","ogr")
+        QgsProject.instance().addMapLayer(oversigtskort)
+        antalKort = 0
+        for feat in oversigtskort.getFeatures():
+            antalKort +=1 
+        QMessageBox.about(self.dockwidget,"MuseumsGIS", "Indlæste " + str(antalKort) + " Original-1 kort.\nFlere kort tilføjes hver uge. Husk at opdatere MuseumGIS-plugin i menuen Plugins -> Administrér og Installér Plugins.\nOpdateret 30-04-2022.")
 
     def kortKnapKlik(self):
         src_crs = self.iface.mapCanvas().mapSettings().destinationCrs()
